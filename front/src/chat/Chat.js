@@ -1,95 +1,112 @@
 import React, { useEffect } from 'react';
 import Input from './Input';
 import Message from './Message';
-import CustomScrollBar from './CustomScrollBar';
 
 const Chat = () => {
     const div = React.useRef(null);
+    const author = 'John';
     const [messages, setMessages] = React.useState([
         {
             id: 1,
-            message: 'Hello',
-            isAuthor: true,
+            content: 'Hello',
+            author: 'John',
+            timestamp: 1689561600000,
         },
         {
             id: 2,
-            message: 'Hi',
-            isAuthor: false,
+            content: 'Hi',
+            author: 'Jane',
+            timestamp: 1689561600001,
         },
         {
             id: 3,
-            message: 'How are you?',
-            isAuthor: true,
+            content: 'How are you?',
+            author: 'John',
+            timestamp: 1689561600002,
         },
         {
             id: 4,
-            message: 'I am fine, and you?',
-            isAuthor: false,
+            content: 'I am fine, and you?',
+            author: 'Jane',
+            timestamp: 1689561600003,
         },
         {
             id: 5,
-            message: 'I am fine too',
-            isAuthor: true,
+            content: 'I am fine too',
+            author: 'John',
+            timestamp: 1689561600004,
         },
         {
             id: 6,
-            message: 'What are you doing?',
-            isAuthor: true,
+            content: 'What are you doing?',
+            author: 'Jane',
+            timestamp: 1689561600005,
         },
         {
             id: 7,
-            message: 'I am learning React',
-            isAuthor: false,
+            content: 'I am learning React',
+            author: 'John',
+            timestamp: 1689561600006,
         },
         {
             id: 8,
-            message: 'That is great',
-            isAuthor: true,
+            content: 'That is great',
+            author: 'Jane',
+            timestamp: 1689561600007,
         },
         {
             id: 9,
-            message: 'Yes, it is',
-            isAuthor: false,
+            content: 'Yes, it is',
+            author: 'John',
+            timestamp: 1689561600008,
         },
         {
             id: 10,
-            message: 'What is your name?',
-            isAuthor: true,
+            content: 'What is your name?',
+            author: 'Jane',
+            timestamp: 1689561600009,
         },
         {
             id: 11,
-            message: 'My name is John',
-            isAuthor: false,
+            content: 'My name is John',
+            author: 'John',
+            timestamp: 1689561600010,
         },
         {
             id: 12,
-            message: 'Nice to meet you',
-            isAuthor: true,
+            content: 'Nice to meet you',
+            author: 'Jane',
+            timestamp: 1689561600011,
         },
         {
             id: 13,
-            message: 'Nice to meet you too',
-            isAuthor: false,
+            content: 'Nice to meet you too',
+            author: 'John',
+            timestamp: 1689561600012,
         },
         {
             id: 14,
-            message: 'Bye',
-            isAuthor: true,
+            content: 'Bye',
+            author: 'Jane',
+            timestamp: 1689561600013,
         },
         {
             id: 15,
-            message: 'Bye',
-            isAuthor: false,
+            content: 'Bye',
+            author: 'John',
+            timestamp: 1689561600014,
         },
         {
             id: 16,
-            message: 'See you later',
-            isAuthor: true,
+            content: 'See you later',
+            author: 'Jane',
+            timestamp: 1689561600015,
         },
         {
             id: 17,
-            message: 'See you later',
-            isAuthor: false,
+            content: 'See you later',
+            author: 'John',
+            timestamp: 1689561600016,
         },
     ]);
 
@@ -102,17 +119,16 @@ const Chat = () => {
     }, [messages]);
 
     return (
-        <div className='flex flex-col h-screen w-96'>
-            <CustomScrollBar className='w-2 h-full absolute right-0 top-0' />
+        <div className='flex flex-col h-screen w-128'>
             <div
                 ref={div}
-                className='scroll-smooth h-full overflow-y-auto overflow-x-hidden'
+                className='scroll-smooth h-full overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-200 scrollbar-track-transparent scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-w-3'
             >
                 {messages.map((message) => (
                     <Message
                         key={message.id}
-                        isAuthor={message.isAuthor}
-                        message={message.message}
+                        message={message}
+                        author={author}
                     />
                 ))}
                 <div className='h-8' />
@@ -123,6 +139,7 @@ const Chat = () => {
                     div={div}
                     messages={messages}
                     setMessages={setMessages}
+                    author={author}
                 />
             </div>
         </div>
