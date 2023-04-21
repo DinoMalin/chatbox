@@ -2,8 +2,13 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ChatBox from './ChatBox';
 import Home from './Home';
+import Cookies from 'js-cookie';
 
 const App = () => {
+    const userUUID = Cookies.get('userUUID');
+    if (!userUUID) {
+        Cookies.set('userUUID', Math.random().toString(36).substring(2));
+    }
     return (
         <BrowserRouter>
             <Routes>

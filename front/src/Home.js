@@ -35,9 +35,9 @@ const Home = () => {
                         Create a channel
                     </button>
 
-                    <div class='inline-flex items-center justify-center w-full'>
+                    <div className='inline-flex items-center justify-center w-full'>
                         <hr className='w-64 h-px my-8 bg-blue-950 border-0' />
-                        <span class='absolute px-3 font-medium text-blue-950 -translate-x-1/2 bg-white left-1/2 '>
+                        <span className='absolute px-3 font-medium text-blue-950 -translate-x-1/2 bg-white left-1/2 '>
                             or
                         </span>
                     </div>
@@ -49,10 +49,9 @@ const Home = () => {
                         <div className='col-span-9'>
                             <input
                                 type='text'
-                                className='w-full py-2 px-4 focus:outline-none rounded-md appearance-none  ease-in-out duration-300'
+                                className='w-full py-2 px-4 focus:outline-none focus:rounded-md rounded-md appearance-none ease-in-out duration-300'
                                 placeholder='Enter a code...'
                                 ref={input}
-                                pattern='[0-9]+' // only number
                             />
                         </div>
                         <div className='col-span-3'>
