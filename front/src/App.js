@@ -13,7 +13,10 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<Home />} />
-                <Route path='/chatbox' element={<ChatBox />} />
+                <Route
+                    path='/chatbox/:channelID'
+                    element={<ChatBox userUUID={userUUID} />}
+                />
                 <Route path='*' element={<div>404</div>} />
             </Routes>
         </BrowserRouter>

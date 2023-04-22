@@ -1,114 +1,27 @@
 import React, { useEffect } from 'react';
 import Input from './Input';
 import Message from './Message';
+import axios from 'axios';
 
-const Chat = () => {
+const Chat = (props) => {
+    const linkFetch = `http://localhost:3000/api/messages/${props.channelID}`;
+    const linkAuthor = `http://localhost:3000/api/user/${props.userUUID}`;
+
     const div = React.useRef(null);
-    const author = 'John';
-    const [messages, setMessages] = React.useState([
-        {
-            id: 1,
-            content: 'Hello',
-            author: 'John',
-            timestamp: 1689561600000,
-        },
-        {
-            id: 2,
-            content: 'Hi',
-            author: 'Jane',
-            timestamp: 1689561600001,
-        },
-        {
-            id: 3,
-            content: 'How are you?',
-            author: 'John',
-            timestamp: 1689561600002,
-        },
-        {
-            id: 4,
-            content: 'I am fine, and you?',
-            author: 'Jane',
-            timestamp: 1689561600003,
-        },
-        {
-            id: 5,
-            content: 'I am fine too',
-            author: 'John',
-            timestamp: 1689561600004,
-        },
-        {
-            id: 6,
-            content: 'What are you doing?',
-            author: 'Jane',
-            timestamp: 1689561600005,
-        },
-        {
-            id: 7,
-            content: 'I am learning React',
-            author: 'John',
-            timestamp: 1689561600006,
-        },
-        {
-            id: 8,
-            content: 'That is great',
-            author: 'Jane',
-            timestamp: 1689561600007,
-        },
-        {
-            id: 9,
-            content: 'Yes, it is',
-            author: 'John',
-            timestamp: 1689561600008,
-        },
-        {
-            id: 10,
-            content: 'What is your name?',
-            author: 'Jane',
-            timestamp: 1689561600009,
-        },
-        {
-            id: 11,
-            content: 'My name is John',
-            author: 'John',
-            timestamp: 1689561600010,
-        },
-        {
-            id: 12,
-            content: 'Nice to meet you',
-            author: 'Jane',
-            timestamp: 1689561600011,
-        },
-        {
-            id: 13,
-            content: 'Nice to meet you too',
-            author: 'John',
-            timestamp: 1689561600012,
-        },
-        {
-            id: 14,
-            content: 'Bye',
-            author: 'Jane',
-            timestamp: 1689561600013,
-        },
-        {
-            id: 15,
-            content: 'Bye',
-            author: 'John',
-            timestamp: 1689561600014,
-        },
-        {
-            id: 16,
-            content: 'See you later',
-            author: 'Jane',
-            timestamp: 1689561600015,
-        },
-        {
-            id: 17,
-            content: 'See you later',
-            author: 'John',
-            timestamp: 1689561600016,
-        },
-    ]);
+    const author = axios.get(linkAuthor).then((res) => {
+        return res.data;
+    });
+    const [messages, setMessages] = React.useState([]);
+
+    // Fetch messages from the database every second
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            axios.get(linkFetch).then((res) => {
+                setMessages(res.data);
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     function handleScroll() {
         div.current.scrollTop = div.current.scrollHeight;
@@ -137,9 +50,11 @@ const Chat = () => {
                 <hr className='border-gray-300' />
                 <Input
                     div={div}
-                    messages={messages}
+                    /*messages={messages}
                     setMessages={setMessages}
-                    author={author}
+                    author={author}*/
+                    channelID={props.channelID}
+                    userUUID={props.userUUID}
                 />
             </div>
         </div>

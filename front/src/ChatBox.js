@@ -3,10 +3,11 @@ import './index.css';
 import Chat from './chat/Chat';
 import Board from './board/Board';
 
-const ChatBox = () => {
+const ChatBox = (props) => {
+    const channelID = window.location.pathname.split('/')[2];
     return (
         <div className='flex w-screen h-screen justify-center items-center flex-wrap'>
-            <Chat />
+            <Chat channelID={channelID} userUUID={props.userUUID} />
             <Board />
         </div>
     );

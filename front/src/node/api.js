@@ -20,21 +20,19 @@ connection.connect((err) => {
     console.log('Connexion à la base de données MySQL réussie.');
 });
 
-app.get('/dino', (req, res) => {
+app.get('/api/dino', (req, res) => {
     res.send('dinomalin');
 });
 
-app.get('/messages', (req, res) => {
+// function to fetch all messageq
+app.get('/api/messages', (req, res) => {
     connection.query('SELECT * FROM `message`', (err, rows, fields) => {
         if (err) throw err;
         res.send(rows);
     });
 });
 
-app.listen(3000, () => {
-    console.log('Serveur démarré sur le port 3000.');
-});
-
+// function to fetch all messages of a channel
 function getMessages(channelID) {
     connection.query(
         'SELECT * FROM `message` WHERE channelID = ?',
@@ -45,14 +43,14 @@ function getMessages(channelID) {
         }
     );
 }
-app.get('/messages/:channelID', (req, res) => {
+app.get('/api/messages/:channelID', (req, res) => {
     res.send(getMessages(req.params.channelID));
 });
 
 // function to fetch active text of a channel
 function getActiveText(channelID) {
     connection.query(
-        'SELECT * FROM channel WHERE id = ?',
+        'SELECT active_text_area FROM channel WHERE id = ?',
         [channelID],
         (err, rows, fields) => {
             if (err) throw err;
@@ -60,14 +58,14 @@ function getActiveText(channelID) {
         }
     );
 }
-app.get('/activeText/:channelID', (req, res) => {
+app.get('/api/activeText/:channelID', (req, res) => {
     res.send(getActiveText(req.params.channelID));
 });
 
 // function to fetch a user
 function getUser(userUUID) {
     connection.query(
-        'SELECT * FROM user WHERE uuid = ?',
+        'SELECT name FROM user WHERE uuid = ?',
         [userUUID],
         (err, rows, fields) => {
             if (err) throw err;
@@ -75,7 +73,7 @@ function getUser(userUUID) {
         }
     );
 }
-app.get('/user/:userUUID', (req, res) => {
+app.get('/api/user/:userUUID', (req, res) => {
     res.send(getUser(req.params.userUUID));
 });
 
@@ -92,7 +90,7 @@ function postMessage(channelID, userUUID, content) {
         }
     );
 }
-app.post('/message', (req, res) => {
+app.post('/api/messages/send', (req, res) => {
     postMessage(req.body.channelID, req.body.userUUID, req.body.content);
 });
 
@@ -107,7 +105,7 @@ function createChannel(name, userUUID) {
         }
     );
 }
-app.post('/channel', (req, res) => {
+app.post('/api/channel', (req, res) => {
     createChannel(req.body.name, req.body.userUUID);
 });
 
@@ -122,7 +120,7 @@ function modifyActiveText(channelID, content) {
         }
     );
 }
-app.post('/activeText', (req, res) => {
+app.post('/api/activeText', (req, res) => {
     modifyActiveText(req.body.channelID, req.body.content);
 });
 
@@ -136,6 +134,10 @@ function modifyNameUser(userUUID, name) {
         }
     );
 }
-app.post('/nameUser', (req, res) => {
+app.post('/api/nameUser', (req, res) => {
     modifyNameUser(req.body.userUUID, req.body.name);
+});
+
+app.listen(3000, () => {
+    console.log('Serveur démarré sur le port 3000.');
 });

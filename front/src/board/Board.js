@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
-const Board = () => {
-    const channelID = '0001';
+const Board = (props) => {
+    const channelID = String(props.channelID).padStart(4, '0');
     const grid = useRef(null);
     const input = useRef(null);
+    const [activeTextContent, setActiveTextContent] = useState('');
+    const fetchActiveTextLink = `http://localhost:3000/api/activeText/${channelID}`;
     function copyToClipboard() {
         navigator.clipboard.writeText(channelID);
     }
@@ -19,6 +21,19 @@ const Board = () => {
         const name = input.current.value;
         console.log(`Change name to : ${name}`);
     }
+
+    // fetch tous les quarts de secondes pour voir si le texte actif a changé
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            fetch(fetchActiveTextLink)
+                .then((res) => res.json())
+                .then((data) => {
+                    setActiveTextContent(data);
+                });
+        }, 250);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className='flex-col m-6'>
             <label
@@ -65,7 +80,9 @@ const Board = () => {
                 rows='10'
                 className='border-2 border-blue-500 py-2 px-4 rounded-lg focus:outline-none  resize-none w-full mt-4 shadow'
                 placeholder='Write something...'
-            ></textarea>
+            >
+                {activeTextContent}
+            </textarea>
         </div>
     );
 };

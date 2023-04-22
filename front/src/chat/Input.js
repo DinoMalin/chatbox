@@ -1,13 +1,15 @@
 import React from 'react';
+import axios from 'axios';
 
 const Input = (props) => {
+    const linkPost = 'http://localhost:3000/api/messages/send';
     const input = React.useRef(null);
     const [id, setId] = React.useState(18);
     function handleClick() {
         if (input.current.value.trim().length === 0) {
             return;
         }
-        props.setMessages([
+        /*props.setMessages([
             ...props.messages,
             {
                 id: id,
@@ -16,8 +18,17 @@ const Input = (props) => {
                 timestamp: new Date().getTime(),
             },
         ]);
-        setId(id + 1);
+        setId(id + 1);*/
         input.current.value = '';
+        axios
+            .post(linkPost, {
+                channelID: props.channelID,
+                userUUID: props.userUUID,
+                content: input.current.value,
+            })
+            .then((res) => {
+                console.log(res);
+            });
     }
     function handleKeyDown(e) {
         if (e.key === 'Enter') {
