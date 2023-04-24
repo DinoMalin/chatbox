@@ -4,24 +4,45 @@ import Message from './Message';
 import axios from 'axios';
 
 const Chat = (props) => {
-    const linkFetch = `http://localhost:3000/api/messages/${props.channelID}`;
-    const linkAuthor = `http://localhost:3000/api/user/${props.userUUID}`;
-
+    const apiLink = props.apiLink;
+    const linkFetch = `${apiLink}/messages/${props.channelID}`;
     const div = React.useRef(null);
-    const author = axios.get(linkAuthor).then((res) => {
-        return res.data;
-    });
     const [messages, setMessages] = React.useState([]);
-
     // Fetch messages from the database every second
     React.useEffect(() => {
-        const interval = setInterval(() => {
-            axios.get(linkFetch).then((res) => {
-                setMessages(res.data);
-            });
-        }, 1000);
-        return () => clearInterval(interval);
+        axios.get(`${linkFetch}?all=true`).then((res) => {
+            //console.log(res.data);
+            if (res.data.length === 0) {
+                return;
+            } else {
+                console.log('set');
+                setMessages(res.data.reverse());
+            }
+        });
     }, []);
+
+    console.log('msg : ', messages);
+    // Fetch messages from the database every second
+    React.useEffect(() => {
+        const fetchMessage = async () => {
+            const res = await axios.get(`${linkFetch}`);
+            console.log(res.data);
+            if (res.data.length !== 0) {
+                if (messages.length === 0) {
+                    console.log('length nulle');
+                    setMessages(res.data.reverse());
+                    console.log('message:', messages);
+                } else if (
+                    res.data[0].id !== messages[messages.length - 1].id
+                ) {
+                    console.log('new message');
+                    setMessages((messages) => messages.concat(res.data));
+                }
+            }
+        };
+        const interval = setInterval(fetchMessage, 1000);
+        return () => clearInterval(interval);
+    }, [messages]);
 
     function handleScroll() {
         div.current.scrollTop = div.current.scrollHeight;
@@ -41,7 +62,8 @@ const Chat = (props) => {
                     <Message
                         key={message.id}
                         message={message}
-                        author={author}
+                        uuid={props.userUUID}
+                        apiLink={apiLink}
                     />
                 ))}
                 <div className='h-8' />
@@ -49,10 +71,8 @@ const Chat = (props) => {
             <div>
                 <hr className='border-gray-300' />
                 <Input
+                    apiLink={props.apiLink}
                     div={div}
-                    /*messages={messages}
-                    setMessages={setMessages}
-                    author={author}*/
                     channelID={props.channelID}
                     userUUID={props.userUUID}
                 />

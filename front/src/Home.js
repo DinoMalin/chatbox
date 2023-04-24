@@ -1,8 +1,15 @@
+import axios from 'axios';
 import React, { useRef } from 'react';
 
-const Home = () => {
+const Home = (props) => {
+    const apiLink = props.apiLink;
+    const link = props.link;
     const grid = useRef(null);
     const input = useRef(null);
+    const createChannelLink = `${apiLink}/channel`;
+    const checkChannelLink = `${apiLink}/channelCheck/`;
+    const getLastChannelLink = `${apiLink}/lastChannel`;
+
     function handleEnter() {
         grid.current.classList.remove('border-blue-500');
         grid.current.classList.add('border-blue-600');
@@ -14,10 +21,37 @@ const Home = () => {
 
     function handleCreate() {
         console.log('Create a channel');
+        axios.post(createChannelLink).then((res) => {
+            console.log(res.data);
+        });
+        let newLink = '';
+        axios.get(getLastChannelLink).then((res) => {
+            console.log(res.data);
+            newLink = `${link}/chatbox/${Number(res.data)}`;
+        });
+        //window.location.href = newLink;
     }
+
     function handleJoin() {
         const code = input.current.value;
+        let valid = null;
+        // il faut vérifier si le channel existe !
+        try {
+            axios.get(checkChannelLink + Number(code)).then((res) => {
+                console.log(res.data);
+            });
+            valid = true;
+        } catch (error) {
+            console.log(error);
+            valid = false;
+        }
+        if (!valid) {
+            console.log(valid);
+            console.log('Channel does not exist');
+            return;
+        }
         console.log(`Join a channel : ${code}`);
+        window.location.href = `${link}/chatbox/${Number(code)}`;
     }
     return (
         <div className='h-screen flex flex-col justify-center select-none'>
